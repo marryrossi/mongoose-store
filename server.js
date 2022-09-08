@@ -39,7 +39,7 @@ app.get('/products', (req, res) => {
 	});
 });
 
-//New
+// Render page to create new product
 app.get('/products/new', (req, res) => {
 	res.render("new.ejs")
 })	
@@ -48,11 +48,11 @@ app.get('/products/new', (req, res) => {
 
 
 //Update
-app.put("products/:id", (res, req) => {
-	product.findById(req.params.id, (error, foundProduct) => {
-		res.send(updatedProduct)
-	})
-})
+// app.put("products/:id", (res, req) => {
+// 	product.findById(req.params.id, (error, foundProduct) => {
+// 		res.send(updatedProduct)
+// 	})
+// })
 
 //Create
 app.post("/products", (req, res) => {
@@ -61,7 +61,7 @@ app.post("/products", (req, res) => {
     });
 })
 
-// //Edit
+// // Render page to edit existing product
 // app.get("products/:id/edit", (req, res) => {
 // 	res.render("edit.ejs")
 // })
