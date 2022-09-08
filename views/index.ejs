@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -10,11 +10,11 @@
         </nav>
         <h1>Products index page</h1>
         <ul>
-            <% Product.forEach(product => { %>
+            <% products.forEach(product => { %>
             	<li><a href="/products/<%=product._id; %>"> <%=product.description; %> 
             		<%=product.name; %>
             		<%=product.price; %>
 				</a></li>
             <% }) %>
         </ul>
-    </body> -->
+    </body>
