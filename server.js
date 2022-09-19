@@ -94,6 +94,17 @@ app.get('/products/:id', (req, res) => {
 	});
 });
 
+app.get('/products/:id/buy', (req, res) => {
+	// Using mongoose $inc operator to decrement by 1
+	// https://www.mongodb.com/docs/manual/reference/operator/update/inc/
+	Product.findByIdAndUpdate(
+        req.params.id,
+        { $inc: { qty: -1 }},
+        (error, updatedProduct) => {
+            res.redirect(`/products/${req.params.id}`)
+        });
+});
+
 // Listener
 const PORT = process.env.PORT
 app.listen(PORT, () => console.log(`server is listening on port: ${PORT}`));

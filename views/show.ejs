@@ -17,6 +17,9 @@
 		Quantity: <%=product.qty %> <br />
 		
 		<a class="productlink" href="/products/<%= product._id %>/edit">Edit</a>
+		<% if (product.qty > 0) { %>
+		<a class="productlink" href="/products/<%= product._id %>/buy">Buy</a>
+		<% } %>
         
         <br></br>
         <form style="display:inline;" action="/products/<%= product._id %>?_method=DELETE" method="POST">
