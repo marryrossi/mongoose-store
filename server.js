@@ -4,7 +4,7 @@ const app = express()
 require("dotenv").config()
 const mongoose = require("mongoose")
 const Product = require("./models/products")
-const storeSeed = require("./models/storeSeed")
+const methodOverride = require("method-override");
 
 //Connect to MongoDB Atlas
 mongoose.connect(process.env.DATABASE_URL, {
@@ -19,18 +19,26 @@ db.on('error', (err) => console.log(err.message + ' is mongod not running?'))
 db.on('connected', () => console.log('mongo connected'))
 db.on('disconnected', () => console.log('mongo disconnected'))
 
-//Middleware, body parser
-app.use(express.urlencoded({ extended: true }))
+//Middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride("_method"));
+app.use(express.static("public"));
+
+// Routes
+app.get('/', (req, res) => {
+	res.send("Welcome!")
+});
 
 // Seed
+const productSeed = require('./models/productSeed.js');
 app.get('/products/seed', (req, res) => {
 	Product.deleteMany({}, (error, allProducts) => {})
-	Product.create(storeSeed, (error, data) => {
+	Product.create(productSeed, (error, data) => {
 		res.redirect("/products")
-	})
-})
+	}); 
+});
 
-//Index
+// Index
 app.get('/products', (req, res) => {
 	Product.find({}, (error, allProducts) => {
 		res.render("index.ejs", {
@@ -45,35 +53,46 @@ app.get('/products/new', (req, res) => {
 })	
 
 //Delete
+app.delete('/products/:id', (req, res) => {
+    Product.findByIdAndDelete(req.params.id, (err, data) =>{
+        res.redirect("/products")
+    })
+});
 
+// Update
+app.put("/products/:id", (req, res) => {
+    Product.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        (error, updatedProduct) => {
+            res.redirect(`/products/${req.params.id}`)
+        });
+});
 
-//Update
-// app.put("products/:id", (res, req) => {
-// 	product.findById(req.params.id, (error, foundProduct) => {
-// 		res.send(updatedProduct)
-// 	})
-// })
-
-//Create
+//Create, post
 app.post("/products", (req, res) => {
     Product.create(req.body, (error, createdProduct) => {
-        res.redirect("/products")
+		res.redirect("/products")
     });
-})
+});
 
-// // Render page to edit existing product
-// app.get("products/:id/edit", (req, res) => {
-// 	res.render("edit.ejs")
-// })
+// Render page to edit existing product
+app.get("/products/:id/edit", (req, res) => {
+	Product.findById(req.params.id, (error, foundProduct) => {
+		res.render('edit.ejs', {
+			product: foundProduct,
+		});
+	});
+});
 
 //Show
 app.get('/products/:id', (req, res) => {
 	Product.findById(req.params.id, (error, foundProduct) => {
 		res.render('show.ejs', {
 			product: foundProduct,
-		})
-	})
-})
+		});
+	});
+});
 
 // Listener
 const PORT = process.env.PORT

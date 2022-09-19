@@ -14,7 +14,14 @@
 		Description: <%=product.description %> <br />
 		<img src=<%=product.img %> <br />
 		Price: <%=product.price %> <br />
-		Quantity: <%= product.description %> <br />
-		<button>Buy</button>
+		Quantity: <%=product.qty %> <br />
+		
+		<a class="productlink" href="/products/<%= product._id %>/edit">Edit</a>
+        
+        <br></br>
+        <form style="display:inline;" action="/products/<%= product._id %>?_method=DELETE" method="POST">
+            <input class="delete" type="submit" value="DELETE" />
+        </form>   
+    </div>
 	</body>
 </html>
